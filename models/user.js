@@ -9,4 +9,8 @@ module.exports = {
     return db.add('user', entity);
   },
 
+  findOne: entity => {
+    return db.load(`select id,username,password from user where username="${entity.username}" limit 1`)
+  }
+
 };
