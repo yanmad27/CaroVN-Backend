@@ -14,13 +14,13 @@ passport.use(new LocalStrategy({
         //this one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
         return UserModel.findOne({ username, password })
             .then(user => {
-                if (!user) {
+                console.log("user in then:", user);
+                if (user.length === 0) {
                     console.log('Incorrect username or password.')
                     return cb(null, false, { message: 'Incorrect username or password.' });
                 }
                 var bcrypt = require('bcryptjs');
                 console.log(password);
-                console.log(user[0].password);
 
                 const isCorrectPassword = bcrypt.compareSync(password, user[0].password);
                 console.log(isCorrectPassword);
@@ -44,7 +44,7 @@ passport.use(new JWTStrategy({
     function (jwtPayload, cb) {
         console.log("passport.js:: jwtPayload: ", jwtPayload);
         //find the user in db if needed. This functionality may be omitted if you store everything you'll need in JWT payload.
-        return UserModel.findOne({username: jwtPayload.username})
+        return UserModel.findOne({ username: jwtPayload.username })
             .then(user => {
                 return cb(null, user[0]);
             })

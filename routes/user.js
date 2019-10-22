@@ -37,7 +37,7 @@ router.post('/login', function (req, res, next) {
       console.log('user/login:: ', err);
       return res.status(400).json({
         message: 'Something is not right',
-        user: user
+        user: null
       });
     }
     console.log('user/login: raw user: ',user);
