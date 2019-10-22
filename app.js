@@ -7,7 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var userRouter = require('./routes/user');
 var passport = require('passport');
-
+var cors = require('cors')
 require('./passport');
 var app = express();
 
@@ -20,6 +20,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(cors())
 
 const meRouter = require('./routes/me');
 app.use('/', indexRouter);
