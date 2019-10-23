@@ -12,14 +12,12 @@ var http = require('http');
  * Get port from environment and store in Express.
  */
 
-// var port = normalizePort(process.env.PORT || '3000');
-var port = 8080;
+var port = normalizePort(process.env.PORT || '8013');
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
-
 var server = http.createServer(app);
 
 /**
@@ -35,6 +33,7 @@ server.on('listening', onListening);
  */
 
 function normalizePort(val) {
+  console.log(`server is running at http://localhost:${val}`);
   var port = parseInt(val, 10);
 
   if (isNaN(port)) {
