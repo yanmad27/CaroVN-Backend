@@ -41,8 +41,7 @@ module.exports = {
             var sql = `INSERT INTO ${tableName} SET ?`;
             console.log(sql);
             connection.query(sql, entity, (error, results, fields) => {
-                console.log(error);
-                if (error) throw reject(error);
+                if (error) reject(error);
                 else resolve(results);//resolve(value.insertID) tự động tăng ID
                 connection.end();
             });
@@ -57,7 +56,7 @@ module.exports = {
             delete entity[idField];//xóa giá trị ID trong json Category
             var sql = `update ${tableName} SET ? WHERE ${idField} = ?`;
             connection.query(sql, [entity, id], (error, value) => {
-                if (error) throw reject(error);
+                if (error) reject(error);
                 else resolve(value.changedRows);//resolve(value.insertID) tự động tăng ID
                 connection.end();
             });
