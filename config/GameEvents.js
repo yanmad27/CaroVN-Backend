@@ -1,0 +1,13 @@
+const NEW_MOVE = 'NEW_MOVE';
+const FIND_PLAYER = 'FIND_PLAYER';
+const PAIR_PLAYER = 'PAIR_PLAYER';
+const REQUIRE_UNDO = 'REQUIRE_UNDO';
+const REQUIRE_TIE = 'REQUIRE_TIE';
+const QUIT = 'QUIT';
+
+module.exports = {
+    NEW_MOVE,
+    FIND_PLAYER,
+    PAIR_PLAYER, REQUIRE_TIE, REQUIRE_UNDO,
+    QUIT
+}

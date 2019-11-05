@@ -16,6 +16,7 @@ router.post('/register', (req, res, next) => {
   var hash = bcrypt.hashSync(req.body.password, salt);
 
   var entity = {
+    nickname: req.body.nickname,
     username: req.body.username,
     password: hash,
   };
@@ -23,6 +24,7 @@ router.post('/register', (req, res, next) => {
   userModel.add(entity).then(id => {
     res.status(200).json({ messages: "Success!!!" });
   }).catch(reason => {
+    console.log(reason);
     res.status(500).json({ messages: "Error!!!" });
   })
 })
@@ -40,7 +42,7 @@ router.post('/login', function (req, res, next) {
         user: null
       });
     }
-    console.log('user/login: raw user: ',user);
+    console.log('user/login: raw user: ', user);
     req.login(user, { session: false }, (err) => {
       console.log('user/login:: user', user);
       if (err) {

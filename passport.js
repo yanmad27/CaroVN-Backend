@@ -28,10 +28,10 @@ passport.use(new LocalStrategy({
                     console.log('Incorrect username or password.')
                     return cb(null, false, { message: 'Incorrect username or password.' });
                 }
-                const { id, username } = user[0];
+                const { id, username, nickname } = user[0];
 
                 console.log('Logged In Successfully.')
-                return cb(null, { id, username }, { message: 'Logged In Successfully.' });
+                return cb(null, { id, username, nickname }, { message: 'Logged In Successfully.' });
             })
             .catch(err => cb(err));
     }

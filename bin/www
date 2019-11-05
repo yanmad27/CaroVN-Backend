@@ -3,7 +3,8 @@
 /**
  * Module dependencies.
  */
-
+var ChatEvents = require('../config/ChatEvents');
+var GameEvents = require('../config/GameEvents');
 var app = require('../app');
 var debug = require('debug')('carovn-backend:server');
 var http = require('http');
@@ -21,10 +22,71 @@ app.set('port', port);
 var server = http.createServer(app);
 
 /**
+ * Create Socket
+ */
+var io = require('socket.io')(server);
+
+var defaultRoom = { host: undefined, person: 2 }
+var rooms = [];
+rooms.push(defaultRoom);
+
+io.on('connection', socket => {
+  console.log(socket.id + ': connected');
+  // lắng nghe khi người dùng thoát
+  socket.on('disconnect', dataTranfer => {
+    console.log(socket.id + ': disconnected');
+    const { host } = dataTranfer;
+    const removeIndex = rooms.lastIndexOf({ host, person: 2 });
+    rooms.splice(removeIndex, 1);
+    socket.to(host).emit(GameEvents.QUIT);
+    socket.leaveAll();
+  })
+
+  socket.on(GameEvents.FIND_PLAYER, () => {
+    let lastItemIndex = rooms.length - 1;
+    if (rooms[lastItemIndex] === undefined) {
+      rooms.push(defaultRoom);
+      lastItemIndex = rooms.length - 1;
+    }
+    console.log('last room: ', rooms[lastItemIndex]);
+    if (rooms[lastItemIndex].person === 1) {
+      const host = rooms[lastItemIndex].host;
+      socket.join(host);
+      console.log("socket in room: ", socket.rooms);
+      rooms[lastItemIndex].persion = 2;
+      console.log('emit pair in host:', host);
+      io.sockets.in(host).emit(GameEvents.PAIR_PLAYER, host);
+    }
+    else if (rooms[lastItemIndex].person === 2) {
+      socket.join(socket.id);
+      var newRoom = { host: socket.id, person: 1 };
+      rooms.push(newRoom);
+    }
+  })
+
+  socket.on(ChatEvents.NEW_MESSAGE, dataTranfer => {
+    console.log(dataTranfer);
+    const { host } = dataTranfer;
+    io.sockets.in(host).emit(ChatEvents.NEW_MESSAGE, dataTranfer);
+  })
+
+  socket.on(GameEvents.NEW_MOVE, dataTranfer => {
+    const { host } = dataTranfer;
+    io.sockets.in(host).emit(GameEvents.NEW_MOVE, dataTranfer);
+
+  })
+
+
+});
+
+
+/**
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+server.listen(port, () => {
+  console.log(`server is running at http://localhost:${port}`);
+})
 server.on('error', onError);
 server.on('listening', onListening);
 
@@ -33,7 +95,6 @@ server.on('listening', onListening);
  */
 
 function normalizePort(val) {
-  console.log(`server is running at http://localhost:${val}`);
   var port = parseInt(val, 10);
 
   if (isNaN(port)) {
