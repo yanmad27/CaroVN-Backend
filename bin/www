@@ -42,7 +42,7 @@ io.on('connection', socket => {
     socket.leaveAll();
   })
 
-  socket.on(GameEvents.FIND_PLAYER, () => {
+  socket.on(GameEvents.FIND_PLAYER, dataTranfer => {
     let lastItemIndex = rooms.length - 1;
     if (rooms[lastItemIndex] === undefined) {
       rooms.push(defaultRoom);
@@ -53,12 +53,17 @@ io.on('connection', socket => {
       const host = rooms[lastItemIndex].host;
       socket.join(host);
       console.log("socket in room: ", socket.rooms);
-      rooms[lastItemIndex].persion = 2;
+      rooms[lastItemIndex].person = 2;
       console.log('emit pair in host:', host);
-      io.sockets.in(host).emit(GameEvents.PAIR_PLAYER, host);
+      setTimeout(() => {
+        io.sockets.in(host).emit(GameEvents.PAIR_PLAYER, host);
+        io.sockets.in(host).emit(ChatEvents.NEW_MESSAGE, { from: 'sys', host, message: `${dataTranfer} join room!` });
+      }, 2000)
+
     }
     else if (rooms[lastItemIndex].person === 2) {
       socket.join(socket.id);
+      socket.emit(ChatEvents.NEW_MESSAGE, { from: 'sys', host: socket.id, message: `${dataTranfer} join room!` });
       var newRoom = { host: socket.id, person: 1 };
       rooms.push(newRoom);
     }
@@ -74,6 +79,11 @@ io.on('connection', socket => {
     const { host } = dataTranfer;
     io.sockets.in(host).emit(GameEvents.NEW_MOVE, dataTranfer);
 
+  })
+
+  socket.on(GameEvents.HAVE_WINNER, dataTranfer => {
+    const { host } = dataTranfer;
+    io.sockets.in(host).emit(GameEvents.HAVE_WINNER, dataTranfer);
   })
 
 

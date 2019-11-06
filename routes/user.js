@@ -29,6 +29,16 @@ router.post('/register', (req, res, next) => {
   })
 })
 
+router.post('/edit', (req, res, next) => {
+
+  var entity = {
+      nickname: req.body.nickname,
+      username: req.body.username,
+  };
+  userModel.edit(entity)
+  res.status(200).json({ message: 'success' });
+})
+
 /* POST login. */
 router.post('/login', function (req, res, next) {
   console.log("user/login:: start");

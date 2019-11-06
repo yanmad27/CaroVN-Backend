@@ -11,6 +11,10 @@ module.exports = {
 
   findOne: entity => {
     return db.load(`select id,username,password,nickname from user where username="${entity.username}" limit 1`)
+  },
+
+  edit: entity => {
+    return db.update('user', 'username', entity);
   }
 
 };

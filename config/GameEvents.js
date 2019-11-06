@@ -4,10 +4,12 @@ const PAIR_PLAYER = 'PAIR_PLAYER';
 const REQUIRE_UNDO = 'REQUIRE_UNDO';
 const REQUIRE_TIE = 'REQUIRE_TIE';
 const QUIT = 'QUIT';
+const HAVE_WINNER = 'HAVE_WINNER';
 
 module.exports = {
     NEW_MOVE,
     FIND_PLAYER,
     PAIR_PLAYER, REQUIRE_TIE, REQUIRE_UNDO,
-    QUIT
+    QUIT,
+    HAVE_WINNER
 }

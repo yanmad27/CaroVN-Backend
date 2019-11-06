@@ -68,6 +68,7 @@ module.exports = {
             var connection = createConnection();
             connection.connect();
             var sql = `delete from ${tableName} where ${idField} = ?`;
+            console.log(sql);
             connection.query(sql, id, (error, value) => {
                 if (error) throw reject(error);
                 else resolve(value.affectedRows);//resolve(value.insertID) tự động tăng ID
